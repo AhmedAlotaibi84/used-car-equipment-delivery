@@ -1,54 +1,47 @@
 import streamlit as st
 
-st.set_page_config(page_title="Junkyard Marketplace", layout="wide")
+st.set_page_config(page_title="Junkyard Dashboard", layout="wide")
 
-st.title("🚗 Junkyard Marketplace")
+# storage (temporary)
+if "parts" not in st.session_state:
+    st.session_state.parts = []
 
-st.subheader("Available Car Parts")
+st.title("🏭 Junkyard Dashboard")
 
-junkyards = [
-    {
-        "name": "Riyadh Junkyard",
-        "city": "Riyadh",
-        "parts": [
-            {
-                "car": "Toyota Camry",
-                "year": "2018",
-                "part": "Front Bumper",
-                "price": "450 SAR",
-                "note": "Original, good condition",
-                "image": "https://images.unsplash.com/photo-1542362567-b07e54358753"
-            },
-            {
-                "car": "Toyota Camry",
-                "year": "2019",
-                "part": "Headlight",
-                "price": "300 SAR",
-                "note": "Left side",
-                "image": "https://images.unsplash.com/photo-1605559424843-9c6dc11f98e3"
-            }
-        ]
-    },
-    {
-        "name": "Jeddah Auto Parts",
-        "city": "Jeddah",
-        "parts": [
-            {
-                "car": "Ford Explorer",
-                "year": "2017",
-                "part": "Side Mirror",
-                "price": "250 SAR",
-                "note": "Electric mirror",
-                "image": "https://images.unsplash.com/photo-1553440569-bcc63803a83d"
-            }
-        ]
-    }
-]
+st.subheader("➕ Add New Car Part")
 
-for yard in junkyards:
-    st.markdown(f"## 🏭 {yard['name']} — {yard['city']}")
+with st.form("add_part_form"):
+    car = st.text_input("Car Brand & Model")
+    year = st.text_input("Year")
+    part_name = st.text_input("Part Name")
+    price = st.text_input("Price (SAR)")
+    note = st.text_area("Note")
+    image = st.file_uploader("Upload Part Image", type=["jpg", "png", "jpeg"])
 
-    for part in yard["parts"]:
+    submitted = st.form_submit_button("Add Part")
+
+    if submitted:
+        if car and part_name and price and image:
+            st.session_state.parts.append({
+                "car": car,
+                "year": year,
+                "part": part_name,
+                "price": price,
+                "note": note,
+                "image": image
+            })
+            st.success("✅ Part added successfully!")
+        else:
+            st.error("❌ Please fill all required fields")
+
+st.divider()
+
+st.subheader("📦 Your Listed Parts")
+
+if not st.session_state.parts:
+    st.info("No parts added yet.")
+else:
+    for part in st.session_state.parts:
         col1, col2 = st.columns([1, 2])
 
         with col1:
@@ -58,7 +51,7 @@ for yard in junkyards:
             st.markdown(f"""
             **Part:** {part['part']}  
             **Car:** {part['car']} ({part['year']})  
-            **Price:** 💰 {part['price']}  
+            **Price:** 💰 {part['price']} SAR  
             **Note:** {part['note']}
             """)
 
