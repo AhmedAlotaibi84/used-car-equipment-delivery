@@ -1,14 +1,13 @@
-from flask import Flask, render_template
+import streamlit as st
 
-app = Flask(__name__)
+st.set_page_config(page_title="Junkyard Marketplace", layout="wide")
 
-# =====================
-# Fake Junkyard Data
-# =====================
+st.title("🚗 Junkyard Marketplace")
+
+st.subheader("Available Car Parts")
 
 junkyards = [
     {
-        "id": 1,
         "name": "Riyadh Junkyard",
         "city": "Riyadh",
         "parts": [
@@ -31,7 +30,6 @@ junkyards = [
         ]
     },
     {
-        "id": 2,
         "name": "Jeddah Auto Parts",
         "city": "Jeddah",
         "parts": [
@@ -47,14 +45,21 @@ junkyards = [
     }
 ]
 
-# =====================
-# Routes
-# =====================
+for yard in junkyards:
+    st.markdown(f"## 🏭 {yard['name']} — {yard['city']}")
 
-@app.route("/")
-def home():
-    return render_template("parts.html", junkyards=junkyards)
+    for part in yard["parts"]:
+        col1, col2 = st.columns([1, 2])
 
+        with col1:
+            st.image(part["image"], use_container_width=True)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        with col2:
+            st.markdown(f"""
+            **Part:** {part['part']}  
+            **Car:** {part['car']} ({part['year']})  
+            **Price:** 💰 {part['price']}  
+            **Note:** {part['note']}
+            """)
+
+        st.divider()
