@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Junkyard Marketplace</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; padding: 20px; }
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Available Car Parts</h1>
+
+{% for yard in junkyards %}
+    <h2>{{ yard.name }} - {{ yard.city }}</h2>
+
+    {% for part in yard.parts %}
+        <div class="card">
+            <h3>{{ part.part }}</h3>
+            <p><strong>Car:</strong> {{ part.car }} ({{ part.year }})</p>
+            <p><strong>Price:</strong> {{ part.price }}</p>
+            <p><strong>Note:</strong> {{ part.note }}</p>
+            <img src="{{ part.image }}" alt="part image">
+        </div>
+    {% endfor %}
+
+{% endfor %}
+
+</body>
+</html>
