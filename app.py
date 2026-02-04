@@ -1,48 +1,60 @@
-import streamlit as st
-from database import create_tables, add_user, get_user
+from flask import Flask, render_template
 
-st.set_page_config(page_title="Junkyard Marketplace", layout="centered")
-create_tables()
+app = Flask(__name__)
 
-st.title("🚗 Junkyard Marketplace")
+# =====================
+# Fake Junkyard Data
+# =====================
 
-if "user" not in st.session_state:
-    st.session_state.user = None
-
-menu = st.radio("Choose action", ["Login", "Register"])
-
-if menu == "Register":
-    st.subheader("Create account")
-
-    name = st.text_input("Name")
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
-    role = st.selectbox("Role", ["buyer", "junkyard"])
-
-    if st.button("Register"):
-        if add_user(email, password, role, name):
-            st.success("Account created! You can login now.")
-        else:
-            st.error("Email already exists")
-
-elif menu == "Login":
-    st.subheader("Login")
-
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Login"):
-        user = get_user(email, password)
-        if user:
-            st.session_state.user = {
-                "id": user[0],
-                "role": user[1],
-                "name": user[2]
+junkyards = [
+    {
+        "id": 1,
+        "name": "Riyadh Junkyard",
+        "city": "Riyadh",
+        "parts": [
+            {
+                "car": "Toyota Camry",
+                "year": "2018",
+                "part": "Front Bumper",
+                "price": "450 SAR",
+                "note": "Original, good condition",
+                "image": "https://images.unsplash.com/photo-1542362567-b07e54358753"
+            },
+            {
+                "car": "Toyota Camry",
+                "year": "2019",
+                "part": "Headlight",
+                "price": "300 SAR",
+                "note": "Left side",
+                "image": "https://images.unsplash.com/photo-1605559424843-9c6dc11f98e3"
             }
-            st.success(f"Welcome {user[2]} 👋")
-        else:
-            st.error("Invalid email or password")
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Jeddah Auto Parts",
+        "city": "Jeddah",
+        "parts": [
+            {
+                "car": "Ford Explorer",
+                "year": "2017",
+                "part": "Side Mirror",
+                "price": "250 SAR",
+                "note": "Electric mirror",
+                "image": "https://images.unsplash.com/photo-1553440569-bcc63803a83d"
+            }
+        ]
+    }
+]
 
-if st.session_state.user:
-    st.divider()
-    st.write("Logged in as:", st.session_state.user["role"])
+# =====================
+# Routes
+# =====================
+
+@app.route("/")
+def home():
+    return render_template("parts.html", junkyards=junkyards)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
