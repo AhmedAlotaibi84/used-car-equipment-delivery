@@ -43,3 +43,22 @@ def create_tables():
     """)
 
     conn.commit()
+    
+    def add_user(email, password, role, name):
+    try:
+        c.execute(
+            "INSERT INTO users (email, password, role, name) VALUES (?, ?, ?, ?)",
+            (email, password, role, name)
+        )
+        conn.commit()
+        return True
+    except:
+        return False
+
+
+def get_user(email, password):
+    c.execute(
+        "SELECT id, role, name FROM users WHERE email=? AND password=?",
+        (email, password)
+    )
+    return c.fetchone()
