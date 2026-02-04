@@ -1,6 +1,13 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect("data/app.db", check_same_thread=False)
+DB_DIR = "data"
+DB_PATH = os.path.join(DB_DIR, "app.db")
+
+# تأكد أن المجلد موجود
+os.makedirs(DB_DIR, exist_ok=True)
+
+conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 c = conn.cursor()
 
 def create_tables():
