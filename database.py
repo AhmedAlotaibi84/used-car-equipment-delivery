@@ -1,10 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("data/app.db", check_same_thread=False)
-c = conn.cursor()
-
-
-conn = sqlite3.connect("data/app.db", check_same_thread=False)
+conn = sqlite3.connect("app.db", check_same_thread=False)
 c = conn.cursor()
 
 def create_tables():
